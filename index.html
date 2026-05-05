@@ -1,5 +1,131 @@
+<!DOCTYPE html>
 <html>
 <head>
-<p> hello world</p>
+    <title>Online Management System</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            text-align: center;
+        }
+        h1 {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px gray;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            width: 30%;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid gray;
+            padding: 10px;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        .delete {
+            background: red;
+        }
+    </style>
 </head>
+<body>
+
+<h1>Online Student Management System</h1>
+
+<div class="container">
+    <h3>Add Student</h3>
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="course" placeholder="Course">
+    <input type="number" id="age" placeholder="Age">
+    <br>
+    <button onclick="addStudent()">Add</button>
+
+    <h3>Student List</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Age</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="studentList"></tbody>
+    </table>
+</div>
+
+<script>
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+
+    function saveData() {
+        localStorage.setItem("students", JSON.stringify(students));
+    }
+
+    function addStudent() {
+        let name = document.getElementById("name").value;
+        let course = document.getElementById("course").value;
+        let age = document.getElementById("age").value;
+
+        if (name === "" || course === "" || age === "") {
+            alert("Please fill all fields");
+            return;
+        }
+
+        students.push({ name, course, age });
+        saveData();
+        displayStudents();
+
+        document.getElementById("name").value = "";
+        document.getElementById("course").value = "";
+        document.getElementById("age").value = "";
+    }
+
+    function displayStudents() {
+        let list = document.getElementById("studentList");
+        list.innerHTML = "";
+
+        students.forEach((student, index) => {
+            list.innerHTML += `
+                <tr>
+                    <td>${student.name}</td>
+                    <td>${student.course}</td>
+                    <td>${student.age}</td>
+                    <td><button class="delete" onclick="deleteStudent(${index})">Delete</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteStudent(index) {
+        students.splice(index, 1);
+        saveData();
+        displayStudents();
+    }
+
+    displayStudents();
+</script>
+
+</body>
 </html>
