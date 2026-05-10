@@ -1,131 +1,230 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Online Management System</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f4f4;
-            text-align: center;
-        }
-        h1 {
-            background: #4CAF50;
-            color: white;
-            padding: 10px;
-        }
-        .container {
-            width: 60%;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px gray;
-        }
-        input {
-            padding: 10px;
-            margin: 5px;
-            width: 30%;
-        }
-        button {
-            padding: 10px 20px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid gray;
-            padding: 10px;
-        }
-        th {
-            background: #4CAF50;
-            color: white;
-        }
-        .delete {
-            background: red;
-        }
-    </style>
-</head>
 <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">OS</span>
+        <span class="brand-mark">SM</span>
+        <div>
+          <strong>OpenSchool</strong>
+          <small>Student Portal</small>
+          <strong>StudentManager</strong>
+          <small>School & College Portal</small>
+        </div>
+      </div>
 
-<h1>Online Student Management System</h1>
+      <nav aria-label="Primary navigation">
+        <a href="#dashboard" class="active">Dashboard</a>
+        <a href="#students">Students</a>
+        <a href="#academics">Academics</a>
+        <a href="#attendance">Attendance</a>
+        <a href="#grades">Grades</a>
+        <a href="#fees">Fees</a>
+        <a href="#placements">Placements</a>
+      </nav>
+    </aside>
 
-<div class="container">
-    <h3>Add Student</h3>
-    <input type="text" id="name" placeholder="Name">
-    <input type="text" id="course" placeholder="Course">
-    <input type="number" id="age" placeholder="Age">
-    <br>
-    <button onclick="addStudent()">Add</button>
+        <div class="top-actions">
+          <label class="search">
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Name, ID, class..." />
+            <input id="searchInput" type="search" placeholder="Name, ID, course, department..." />
+          </label>
+          <button id="addStudentBtn" type="button">Add Student</button>
+        </div>
+          <strong id="totalStudents">0</strong>
+        </article>
+        <article>
+          <span>College Students</span>
+          <strong id="collegeStudents">0</strong>
+        </article>
+        <article>
+          <span>Average Attendance</span>
+          <strong id="avgAttendance">0%</strong>
+        </article>
+        <article>
+          <span>Average Grade</span>
+          <strong id="avgGrade">0</strong>
+          <span>Average Score</span>
+          <strong id="avgScore">0</strong>
+        </article>
+        <article>
+          <span>Pending Fees</span>
+          <strong id="pendingFees">0</strong>
+        </article>
+        <article>
+          <span>Placement Ready</span>
+          <strong id="placementReady">0</strong>
+        </article>
+      </section>
 
-    <h3>Student List</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Course</th>
-                <th>Age</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="studentList"></tbody>
-    </table>
-</div>
+      <section class="workspace">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Student Directory</p>
+              <h2>Records</h2>
+              <h2>School and College Records</h2>
+            </div>
+            <select id="classFilter" aria-label="Filter by class">
+              <option value="all">All Classes</option>
+              <option value="10-A">10-A</option>
+              <option value="10-B">10-B</option>
+              <option value="11-A">11-A</option>
+              <option value="12-A">12-A</option>
+            </select>
+            <div class="filters">
+              <select id="levelFilter" aria-label="Filter by level">
+                <option value="all">All Levels</option>
+                <option value="School">School</option>
+                <option value="College">College</option>
+              </select>
+              <select id="departmentFilter" aria-label="Filter by department">
+                <option value="all">All Departments</option>
+                <option value="Science">Science</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Business Administration">Business Administration</option>
+                <option value="Engineering">Engineering</option>
+              </select>
+            </div>
+          </div>
 
-<script>
-    let students = JSON.parse(localStorage.getItem("students")) || [];
-
-    function saveData() {
-        localStorage.setItem("students", JSON.stringify(students));
-    }
-
-    function addStudent() {
-        let name = document.getElementById("name").value;
-        let course = document.getElementById("course").value;
-        let age = document.getElementById("age").value;
-
-        if (name === "" || course === "" || age === "") {
-            alert("Please fill all fields");
-            return;
-        }
-
-        students.push({ name, course, age });
-        saveData();
-        displayStudents();
-
-        document.getElementById("name").value = "";
-        document.getElementById("course").value = "";
-        document.getElementById("age").value = "";
-    }
-
-    function displayStudents() {
-        let list = document.getElementById("studentList");
-        list.innerHTML = "";
-
-        students.forEach((student, index) => {
-            list.innerHTML += `
+          <div class="table-wrap">
                 <tr>
-                    <td>${student.name}</td>
-                    <td>${student.course}</td>
-                    <td>${student.age}</td>
-                    <td><button class="delete" onclick="deleteStudent(${index})">Delete</button></td>
+                  <th>Student</th>
+                  <th>ID</th>
+                  <th>Class</th>
+                  <th>Level</th>
+                  <th>Program</th>
+                  <th>Sem/Class</th>
+                  <th>Attendance</th>
+                  <th>Grade</th>
+                  <th>Score</th>
+                  <th>Credits</th>
+                  <th>Fees</th>
+                  <th>Status</th>
+                  <th>Placement</th>
                 </tr>
-            `;
-        });
-    }
+              </thead>
+              <tbody id="studentRows"></tbody>
+          <form id="studentForm">
+            <label>
+              Full Name
+              <input name="name" type="text" placeholder="e.g. Anaya Sharma" required />
+              <input name="name" type="text" placeholder="e.g. Priya Nair" required />
+            </label>
+            <label>
+              Student ID
+              <input name="studentId" type="text" placeholder="e.g. STU-106" required />
+              <input name="studentId" type="text" placeholder="e.g. COL-205" required />
+            </label>
+            <div class="form-grid">
+              <label>
+                Level
+                <select name="level" required>
+                  <option value="College">College</option>
+                  <option value="School">School</option>
+                </select>
+              </label>
+              <label>
+                Department
+                <select name="department" required>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Business Administration">Business Administration</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Science">Science</option>
+                  <option value="Commerce">Commerce</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Class
+              <select name="className" required>
+                <option value="">Select class</option>
+                <option value="10-A">10-A</option>
+                <option value="10-B">10-B</option>
+                <option value="11-A">11-A</option>
+                <option value="12-A">12-A</option>
+              </select>
+              Program / Course
+              <input name="program" type="text" placeholder="e.g. BCA, B.Tech CSE, 12 Science" required />
+            </label>
+            <div class="form-grid">
+              <label>
+                Semester / Class
+                <input name="term" type="text" placeholder="e.g. Sem 4 or 12-A" required />
+              </label>
+              <label>
+                Credits
+                <input name="credits" type="number" min="0" max="160" value="24" required />
+              </label>
+            </div>
+            <div class="form-grid">
+              <label>
+                Attendance %
+                <input name="attendance" type="number" min="0" max="100" value="90" required />
+              </label>
+              <label>
+                Grade
+                <input name="grade" type="number" min="0" max="100" value="75" required />
+                CGPA / Grade %
+                <input name="score" type="number" min="0" max="100" step="0.1" value="8.2" required />
+              </label>
+            </div>
+            <label>
+              Fee Status
+              <select name="feeStatus" required>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+              </select>
+              Academic Advisor
+              <input name="advisor" type="text" placeholder="e.g. Prof. Rao" required />
+            </label>
+            <div class="form-grid">
+              <label>
+                Fee Status
+                <select name="feeStatus" required>
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Partial">Partial</option>
+                </select>
+              </label>
+              <label>
+                Placement Status
+                <select name="placementStatus" required>
+                  <option value="Not Applicable">Not Applicable</option>
+                  <option value="Training">Training</option>
+                  <option value="Ready">Ready</option>
+                  <option value="Placed">Placed</option>
+                </select>
+              </label>
+            </div>
+            <button type="submit">Save Student</button>
+          </form>
+        </div>
+      </section>
 
-    function deleteStudent(index) {
-        students.splice(index, 1);
-        saveData();
-        displayStudents();
-    }
-
-    displayStudents();
-</script>
-
-</body>
-</html>
+      <section class="insights">
+      <section class="insights" id="academics">
+        <article class="panel" id="attendance">
+          <p class="eyebrow">Attendance</p>
+          <h2>Low Attendance Alerts</h2>
+          <ul id="attendanceAlerts"></ul>
+        </article>
+        <article class="panel" id="grades">
+          <p class="eyebrow">Performance</p>
+          <h2>Top Grade Holders</h2>
+        <article class="panel">
+          <p class="eyebrow">Academics</p>
+          <h2>Top Performers</h2>
+          <ul id="topStudents"></ul>
+        </article>
+        <article class="panel" id="fees">
+          <h2>Fee Follow-ups</h2>
+          <ul id="feeAlerts"></ul>
+        </article>
+        <article class="panel" id="placements">
+          <p class="eyebrow">Career Cell</p>
+          <h2>Placement Tracker</h2>
+          <ul id="placementAlerts"></ul>
+        </article>
+      </section>
+    </main>
